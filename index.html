@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zane Allyson Capalaran | Portfolio</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: Inter, sans-serif; }
+    html { scroll-behavior: smooth; }
+
+    .navbar-toggler-icon {
+      filter: brightness(0) invert(1) !important;
+      opacity: 1 !important;
+    }
+    .navbar-toggler:focus { box-shadow: none !important; }
+
+    /* Clean click (remove ugly focus highlight) */
+    .navbar .nav-link:focus,
+    .navbar .nav-link:focus-visible,
+    .navbar .nav-link:active {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Hover effect with glow */
+    .navbar .nav-link:hover {
+      color: white !important;
+      background: rgba(168,85,247,0.14) !important;
+      border: 1px solid rgba(168,85,247,0.25) !important;
+      box-shadow: 0 0 25px rgba(168,85,247,0.18) !important;
+      border-radius: 999px;
+    }
+
+    /* Active nav link (glow) */
+    .navbar .nav-link.active {
+      color: white !important;
+      background: rgba(168,85,247,0.18) !important;
+      border: 1px solid rgba(168,85,247,0.35) !important;
+      box-shadow: 0 0 30px rgba(168,85,247,0.25) !important;
+      border-radius: 999px;
+    }
+
+    /* Offcanvas style */
+    .offcanvas {
+      background: rgba(2, 6, 23, 0.92) !important;
+      backdrop-filter: blur(14px);
+      border-left: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .offcanvas .nav-link {
+      color: rgba(255,255,255,0.75) !important;
+      border-radius: 14px;
+      padding: 12px 14px !important;
+      border: 1px solid transparent;
+    }
+
+    .offcanvas .nav-link:hover {
+      background: rgba(168,85,247,0.14) !important;
+      border: 1px solid rgba(168,85,247,0.25) !important;
+      box-shadow: 0 0 25px rgba(168,85,247,0.18) !important;
+      color: white !important;
+    }
+
+    /* Active inside offcanvas */
+    .offcanvas .nav-link.active {
+      background: rgba(168,85,247,0.18) !important;
+      border: 1px solid rgba(168,85,247,0.35) !important;
+      box-shadow: 0 0 30px rgba(168,85,247,0.25) !important;
+      color: white !important;
+    }
+
+    /* Reveal Animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .75s ease, transform .75s ease;
+    }
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Background Blobs */
+    @keyframes floaty {
+      0% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(25px,-25px) scale(1.05); }
+      100% { transform: translate(0,0) scale(1); }
+    }
+
+    @keyframes floaty2 {
+      0% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(-25px,25px) scale(1.06); }
+      100% { transform: translate(0,0) scale(1); }
+    }
+
+    /* Card Animated Gradient Border */
+    .glow-card {
+      position: relative;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      transform-style: preserve-3d;
+    }
+
+    .glow-card::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: conic-gradient(
+        from 180deg,
+        rgba(168,85,247,0.0),
+        rgba(168,85,247,0.55),
+        rgba(236,72,153,0.45),
+        rgba(59,130,246,0.35),
+        rgba(168,85,247,0.0)
+      );
+      filter: blur(14px);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      animation: spin 4s linear infinite;
+      z-index: 0;
+    }
+
+    .glow-card:hover::before { opacity: 1; }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .glow-card > .card-inner {
+      position: relative;
+      z-index: 1;
+      border-radius: 1.5rem;
+    }
+
+    /* Button Shine + Ripple */
+    .shine-btn { position: relative; overflow: hidden; }
+    .shine-btn::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 60%;
+      height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transform: rotate(20deg);
+      transition: left 0.6s ease;
+    }
+    .shine-btn:hover::after { left: 130%; }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: rippleAnim 600ms ease-out;
+      background: rgba(255,255,255,0.25);
+      pointer-events: none;
+    }
+    @keyframes rippleAnim {
+      to { transform: scale(3.5); opacity: 0; }
+    }
+
+    /* Profile Pulse Glow */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.45; transform: scale(1); }
+      50% { opacity: 0.75; transform: scale(1.08); }
+    }
+
+    /* Floating icons */
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); opacity: 0.8; }
+      50% { transform: translateY(-10px); opacity: 1; }
+    }
+
+    /* Mouse Glow Spotlight */
+    .spotlight {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(
+        600px circle at var(--x, 50%) var(--y, 50%),
+        rgba(168,85,247,0.14),
+        transparent 60%
+      );
+    }
+
+    /* Navbar bottom glow line */
+    .nav-glow-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(168,85,247,0.7), rgba(236,72,153,0.45), transparent);
+      opacity: 0.6;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-b from-slate-950 via-slate-950 to-black text-white relative overflow-x-hidden">
+
+  <!-- Mouse Spotlight -->
+  <div class="spotlight"></div>
+
+  <!-- BACKGROUND BLOBS -->
+  <div class="pointer-events-none absolute inset-0 overflow-hidden">
+    <div class="absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full blur-3xl opacity-30"
+      style="background: radial-gradient(circle at center, rgba(168,85,247,0.55), transparent 60%);
+             animation: floaty 10s ease-in-out infinite;">
+    </div>
+
+    <div class="absolute top-40 -right-52 w-[560px] h-[560px] rounded-full blur-3xl opacity-25"
+      style="background: radial-gradient(circle at center, rgba(236,72,153,0.45), transparent 60%);
+             animation: floaty2 12s ease-in-out infinite;">
+    </div>
+
+    <div class="absolute bottom-[-200px] left-1/3 w-[600px] h-[600px] rounded-full blur-3xl opacity-20"
+      style="background: radial-gradient(circle at center, rgba(59,130,246,0.35), transparent 60%);
+             animation: floaty 14s ease-in-out infinite;">
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar sticky-top navbar-dark border-bottom border-white border-opacity-10"
+       style="background: rgba(2,6,23,0.65); backdrop-filter: blur(14px);">
+    <div class="container">
+
+      <a class="navbar-brand fw-bold fs-4 m-0 text-white" href="#home">
+        Zane<span class="text-purple-300">.</span>
+      </a>
+
+      <button class="navbar-toggler border-0 d-lg-none" type="button"
+        data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <ul class="navbar-nav ms-auto d-none d-lg-flex flex-row align-items-center gap-2">
+        <li class="nav-item"><a class="nav-link nav-desktop px-3 py-2 text-white/70 transition" href="#home">Home</a></li>
+        <li class="nav-item"><a class="nav-link nav-desktop px-3 py-2 text-white/70 transition" href="#skills">Skills</a></li>
+        <li class="nav-item"><a class="nav-link nav-desktop px-3 py-2 text-white/70 transition" href="#projects">Projects</a></li>
+        <li class="nav-item"><a class="nav-link nav-desktop px-3 py-2 text-white/70 transition" href="#about">About</a></li>
+        <li class="nav-item"><a class="nav-link nav-desktop px-3 py-2 text-white/70 transition" href="#contact">Contact</a></li>
+      </ul>
+
+    </div>
+    <div class="nav-glow-line"></div>
+  </nav>
+
+  <!-- OFFCANVAS MOBILE MENU -->
+  <div class="offcanvas offcanvas-end text-white" tabindex="-1" id="mobileMenu">
+    <div class="offcanvas-header border-bottom border-white border-opacity-10">
+      <h5 class="offcanvas-title fw-bold fs-4 m-0 text-white">
+        Zane<span class="text-purple-300">.</span>
+      </h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body">
+      <ul class="navbar-nav gap-2 fs-5 flex-column">
+        <li class="nav-item"><a class="nav-link offcanvas-link nav-mobile" href="#home" data-target="#home">Home</a></li>
+        <li class="nav-item"><a class="nav-link offcanvas-link nav-mobile" href="#skills" data-target="#skills">Skills</a></li>
+        <li class="nav-item"><a class="nav-link offcanvas-link nav-mobile" href="#projects" data-target="#projects">Projects</a></li>
+        <li class="nav-item"><a class="nav-link offcanvas-link nav-mobile" href="#about" data-target="#about">About</a></li>
+        <li class="nav-item"><a class="nav-link offcanvas-link nav-mobile" href="#contact" data-target="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section id="home" class="container pt-12 lg:pt-20 pb-24 lg:pb-32 scroll-mt-24 relative z-10 reveal">
+    <div class="row align-items-center justify-content-center g-3">
+      <div class="col-lg-7 py-3 lg:py-10">
+
+        <div class="relative mb-3">
+          <span class="absolute -top-5 -left-2 text-purple-300/70 text-xl" style="animation: floatIcon 3.5s ease-in-out infinite;">✦</span>
+          <span class="absolute -top-2 left-24 text-pink-300/70 text-lg" style="animation: floatIcon 4.5s ease-in-out infinite;">✧</span>
+          <span class="absolute -top-6 left-52 text-blue-300/70 text-xl" style="animation: floatIcon 5.2s ease-in-out infinite;">✦</span>
+        </div>
+
+        <p class="text-purple-200 font-semibold tracking-wide mb-2">UI/UX Designer & Frontend Developer</p>
+
+        <h1 class="text-4xl md:text-5xl font-bold leading-tight">Zane Allyson Capalaran</h1>
+
+        <p class="text-slate-200/80 mt-4 text-lg leading-relaxed">
+         To pursue an OJT internship where I can contribute to creating user-centered and responsive web interfaces, while learning industry workflows, improving my development skills, and gaining experience in teamwork and project-based development, while also gaining hands-on experience with real tasks, deadlines, and professional tools used in the workplace.
+        </p>
+
+        <div class="d-flex gap-3 mt-4 flex-wrap">
+          <a href="#projects"
+            class="btn btn-primary px-4 py-2 rounded-pill shadow-sm shine-btn
+                   !bg-purple-500 !border-0 hover:!bg-purple-400
+                   hover:shadow-[0_0_40px_rgba(168,85,247,0.55)]
+                   transition">
+            View Projects
+          </a>
+
+          <a href="#contact"
+            class="btn btn-outline-light px-4 py-2 rounded-pill shine-btn
+                   hover:bg-white/10 hover:border-white/20 transition">
+            Contact Me
+          </a>
+
+          <a href="https://github.com/capalaranzaneallyson" target="_blank"
+            class="text-white/70 hover:text-pink-300 underline underline-offset-4 mt-2 transition">
+            GitHub Profile
+          </a>
+        </div>
+
+        <div class="mt-4 text-slate-300/60 text-sm">
+          📍 Pinagbuhatan, Pasig City • 📞 09453008160 • ✉️ capalaranzaneallyson@gmail.com
+        </div>
+      </div>
+
+      <div class="col-lg-5 text-center">
+        <div class="glow-card">
+          <div class="card-inner bg-white/5 border border-white/10 rounded-3xl p-4 shadow-lg
+                      hover:border-purple-400/40 hover:bg-white/10
+                      hover:shadow-[0_0_45px_rgba(168,85,247,0.18)]
+                      transition duration-300">
+
+            <div class="relative w-40 h-40 mx-auto">
+              <div class="absolute inset-0 rounded-full blur-2xl"
+                style="background: radial-gradient(circle, rgba(168,85,247,0.6), transparent 65%);
+                       animation: pulseGlow 3.2s ease-in-out infinite;">
+              </div>
+
+              <div class="relative w-40 h-40 rounded-full bg-white/10 border border-purple-400/25 grid place-items-center overflow-hidden
+                          shadow-[0_0_35px_rgba(168,85,247,0.22)]">
+                <img src="Profile.jpg" alt="Zane profile photo" class="w-full h-full object-cover" />
+              </div>
+            </div>
+
+            <h3 class="mt-4 text-xl font-semibold">Available for OJT</h3>
+            <p class="text-white/60 mb-0">UI/UX • Frontend • Prototyping</p>
+
+            <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+              <span class="badge text-bg-dark !bg-purple-500/10 !text-purple-100 !border !border-purple-400/25">Figma</span>
+              <span class="badge text-bg-dark !bg-pink-500/10 !text-pink-100 !border !border-pink-400/25">JavaScript</span>
+              <span class="badge text-bg-dark !bg-blue-500/10 !text-blue-100 !border !border-blue-400/25">Tailwind</span>
+              <span class="badge text-bg-dark !bg-white/10 !text-white/80 !border !border-white/10">Bootstrap</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="container pt-4 pb-5 scroll-mt-24 relative z-10 reveal">
+    <div class="text-center mb-4">
+      <h2 class="text-3xl font-bold">Skills</h2>
+      <p class="text-slate-300/60 mt-2">What I use to design and build</p>
+    </div>
+
+    <div class="row g-3 justify-content-center">
+      <div class="col-md-4">
+        <div class="glow-card">
+          <div class="card-inner bg-white/5 border border-white/10 rounded-3xl p-4 h-100
+                      hover:border-purple-400/40 hover:bg-white/10
+                      hover:shadow-[0_0_40px_rgba(168,85,247,0.18)]
+                      hover:-translate-y-1 transition duration-300">
+            <h3 class="text-xl font-semibold">UI/UX</h3>
+            <p class="text-white/60 mt-2 mb-0">
+              Figma • Balsamiq • Canva • Wireframes • Prototypes • UI Design
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="glow-card">
+          <div class="card-inner bg-white/5 border border-white/10 rounded-3xl p-4 h-100
+                      hover:border-purple-400/40 hover:bg-white/10
+                      hover:shadow-[0_0_40px_rgba(168,85,247,0.18)]
+                      hover:-translate-y-1 transition duration-300">
+            <h3 class="text-xl font-semibold">Frontend</h3>
+            <p class="text-white/60 mt-2 mb-0">
+              HTML • CSS • JavaScript • Bootstrap • Tailwind CSS • React
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="glow-card">
+          <div class="card-inner bg-white/5 border border-white/10 rounded-3xl p-4 h-100
+                      hover:border-purple-400/40 hover:bg-white/10
+                      hover:shadow-[0_0_40px_rgba(168,85,247,0.18)]
+                      hover:-translate-y-1 transition duration-300">
+            <h3 class="text-xl font-semibold">Backend + Tools</h3>
+            <p class="text-white/60 mt-2 mb-0">
+              PHP • MySQL • XML • GitHub • VS Code • Cybersecurity
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="container py-6 scroll-mt-24 relative z-10 reveal">
+    <div class="text-center mb-4">
+      <h2 class="text-3xl font-bold">Projects</h2>
+      <p class="text-slate-300/60 mt-2">Each project opens like a notebook page with all UI samples</p>
+    </div>
+
+    <div id="projectsGrid" class="row g-4 justify-content-center"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="container py-5 scroll-mt-24 relative z-10 reveal">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-6">
+        <div class="glow-card">
+          <div class="card-inner bg-white/5 border border-white/10 rounded-3xl p-4
+                      hover:border-purple-400/40 hover:bg-white/10
+                      hover:shadow-[0_0_40px_rgba(168,85,247,0.18)]
+                      transition duration-300">
+            <h2 class="text-3xl font-bold">About Me</h2>
+            <p class="text-white/60 mt-3 mb-0 leading-relaxed">
+              I’m a BSIT student from Pamantasan ng Lungsod ng Pasig with experience in UI/UX design and front-end development.
+              I enjoy turning wireframes into responsive websites and improving user experience through clean design and layout.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="glow-card">
+          <div class="card-inner bg-white/5 border border-white/10 rounded-3xl p-4
+                      hover:border-purple-400/40 hover:bg-white/10
+                      hover:shadow-[0_0_40px_rgba(168,85,247,0.18)]
+                      transition duration-300">
+            <h3 class="text-xl font-semibold">Trainings & Seminars</h3>
+            <ul class="text-white/60 mt-3 space-y-2 list-disc list-inside">
+              <li>President’s List Academic Achievement Awardee</li>
+              <li>Dean’s List Academic Achievement Awardee</li>
+              <li>She++ Workshop & Career Development Webinar Series</li>
+              <li>Alibaba Cloud Certifications + AWS & Azure Badges</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="container py-5 scroll-mt-24 relative z-10 reveal">
+    <div class="text-center mb-4">
+      <h2 class="text-3xl font-bold">Contact</h2>
+      <p class="text-slate-300/60 mt-2">Let’s connect for OJT opportunities or projects</p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="glow-card">
+          <div class="card-inner bg-white/5 border border-white/10 rounded-3xl p-4
+                      hover:border-purple-400/40 hover:bg-white/10
+                      hover:shadow-[0_0_40px_rgba(168,85,247,0.18)]
+                      transition duration-300">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-3">
+                  <p class="text-slate-300/60 text-sm mb-1">Email</p>
+                  <p class="mb-0">capalaranzaneallyson@gmail.com</p>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-3">
+                  <p class="text-slate-300/60 text-sm mb-1">Phone</p>
+                  <p class="mb-0">09453008160</p>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-3">
+                  <p class="text-slate-300/60 text-sm mb-1">GitHub</p>
+                  <a class="text-purple-300 hover:text-pink-300 underline underline-offset-4 transition"
+                    href="https://github.com/capalaranzaneallyson" target="_blank">
+                    github.com/capalaranzaneallyson
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-4 border-t border-white/10 mt-5 relative z-10">
+    <div class="container text-center text-white/40">
+      <p class="mb-0">© <span id="year"></span> Zane Allyson Capalaran. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- NOTEBOOK MODAL -->
+  <div class="modal fade" id="notebookModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content bg-slate-950 text-white border border-white/10 rounded-3xl overflow-hidden">
+        <div class="modal-header border-0 px-4 py-3">
+          <div>
+            <h5 id="notebookTitle" class="modal-title text-xl font-semibold">Project Notebook</h5>
+            <p id="notebookSubtitle" class="text-white/60 text-sm mb-0">UI/UX Screens & Notes</p>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body p-4 md:p-5">
+          <div class="flex flex-col md:flex-row gap-4">
+
+            <div class="bg-white/5 border border-white/10 rounded-3xl p-4 md:p-5 relative overflow-hidden flex-1">
+              <div class="absolute inset-0 opacity-20 pointer-events-none"
+                style="background-image: repeating-linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0.08) 1px, transparent 1px, transparent 28px);">
+              </div>
+
+              <div class="relative">
+                <p id="notebookDesc" class="text-white/70 mt-2 leading-relaxed"></p>
+                <div id="notebookTags" class="d-flex gap-2 flex-wrap mt-3"></div>
+
+                <div class="mt-4">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h4 class="text-lg font-semibold mb-0">Sample Designs</h4>
+                      <p class="text-white/60 text-sm mb-0">Use arrows to browse images.</p>
+                    </div>
+                    <div id="imgCounter" class="text-white/60 text-sm"></div>
+                  </div>
+
+                  <div class="mt-3 relative w-full max-w-3xl mx-auto bg-black/30 rounded-2xl border border-white/10 overflow-hidden flex items-center justify-content-center"
+                    style="min-height: 380px;">
+                    <img id="mainPreview" src="" alt="Preview" class="max-w-full max-h-full object-contain" />
+
+                    <button id="prevBtn" type="button"
+                      class="absolute top-1/2 -translate-y-1/2 left-3 bg-black/50 hover:bg-black/70 border border-white/10 rounded-full w-10 h-10 grid place-items-center z-10 transition">
+                      ◀
+                    </button>
+
+                    <button id="nextBtn" type="button"
+                      class="absolute top-1/2 -translate-y-1/2 right-3 bg-black/50 hover:bg-black/70 border border-white/10 rounded-full w-10 h-10 grid place-items-center z-10 transition">
+                      ▶
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-3xl p-4 md:p-5 w-full md:w-[320px] shrink-0">
+              <h4 class="text-lg font-semibold">Additional Information</h4>
+
+              <div class="mt-3 space-y-3 text-white/70 text-sm">
+                <div>
+                  <p class="text-white/50 mb-1">Role</p>
+                  <p id="notebookRole" class="mb-0">—</p>
+                </div>
+
+                <div>
+                  <p class="text-white/50 mb-1">Timeline</p>
+                  <p id="notebookTimeline" class="mb-0">—</p>
+                </div>
+
+                <div>
+                  <p class="text-white/50 mb-1">Highlights</p>
+                  <ul id="notebookHighlights" class="list-disc list-inside mb-0 space-y-1"></ul>
+                </div>
+              </div>
+
+              <div class="d-flex gap-2 mt-4 flex-wrap">
+                <a id="notebookGithub" href="#" target="_blank"
+                  class="btn btn-sm btn-outline-light rounded-pill px-3 hover:bg-white/10 transition">
+                  GitHub
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Spotlight follow mouse
+    const spotlight = document.querySelector(".spotlight");
+    window.addEventListener("mousemove", (e) => {
+      spotlight.style.setProperty("--x", e.clientX + "px");
+      spotlight.style.setProperty("--y", e.clientY + "px");
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add("show");
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+    // Button ripple
+    document.querySelectorAll(".shine-btn").forEach(btn => {
+      btn.addEventListener("click", function(e) {
+        const circle = document.createElement("span");
+        const diameter = Math.max(this.clientWidth, this.clientHeight);
+        const radius = diameter / 2;
+
+        circle.style.width = circle.style.height = `${diameter}px`;
+        circle.style.left = `${e.clientX - this.getBoundingClientRect().left - radius}px`;
+        circle.style.top = `${e.clientY - this.getBoundingClientRect().top - radius}px`;
+        circle.classList.add("ripple");
+
+        const ripple = this.getElementsByClassName("ripple")[0];
+        if (ripple) ripple.remove();
+        this.appendChild(circle);
+      });
+    });
+
+    // Offcanvas smooth scroll (close first, then scroll)
+    document.querySelectorAll(".offcanvas-link").forEach(link => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const target = document.querySelector(this.dataset.target);
+        if (!target) return;
+
+        const offcanvasEl = document.getElementById("mobileMenu");
+        const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+
+        if (bsOffcanvas) bsOffcanvas.hide();
+
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: "smooth" });
+        }, 300);
+      });
+    });
+
+    // Active nav link on scroll (desktop + mobile) + FIX CARD HEIGHTS
+    const sections = document.querySelectorAll("section[id]");
+    const desktopLinks = document.querySelectorAll(".nav-desktop");
+    const mobileLinks = document.querySelectorAll(".nav-mobile");
+
+    function setActiveLink() {
+      let current = "";
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 120;
+        const sectionHeight = section.offsetHeight;
+
+        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+          current = section.getAttribute("id");
+        }
+      });
+
+      [...desktopLinks, ...mobileLinks].forEach(link => link.classList.remove("active"));
+
+      [...desktopLinks, ...mobileLinks].forEach(link => {
+        if (link.getAttribute("href") === "#" + current) {
+          link.classList.add("active");
+        }
+      });
+    }
+
+    window.addEventListener("scroll", setActiveLink);
+    setActiveLink();
+
+    /* =========================
+       PROJECTS DATA + GRID
+    ========================= */
+    const projectNotebook = {
+      smartvision: {
+        title: "Smart Vision (Capstone)",
+        subtitle: "Braille Text Interpretation & Display",
+        desc: "Created UI/UX designs in Figma/Canva and built the front-end web pages including login, signup, and authentication. Used React with Supabase backend support.",
+        role: "Website Developer & UI/UX Designer",
+        timeline: "June 2025 – December 2025",
+        tags: ["React", "Supabase", "YOLOv8", "UI/UX"],
+        highlights: [
+          "Designed UI/UX in Figma before development",
+          "Built login/signup + authentication screens",
+          "Developed responsive front-end pages"
+        ],
+        github: "https://github.com/capalaranzaneallyson",
+        images: ["SV/Picture1.png","SV/Picture2.png","SV/Picture3.png"]
+      },
+      ctf: {
+        title: "Crack the Code (CTF)",
+        subtitle: "Capture The Flag Game Prototype",
+        desc: "Helped plan the full game flow including scoring, hints, and timer mechanics. Designed UI and built a working prototype with visuals and feedback.",
+        role: "Lead UI/UX Designer & Gameplay Prototype Developer",
+        timeline: "July 2025 – August 2025",
+        tags: ["HTML","CSS","JavaScript","PHP","UI/UX"],
+        highlights: [
+          "Designed the UI in Figma and visuals in Canva",
+          "Implemented scoring, hints, and timer mechanics",
+          "Added visual and sound feedback"
+        ],
+        github: "https://github.com/capalaranzaneallyson",
+        images: ["CTC/Picture1.jpg","CTC/Picture2.jpg","CTC/Picture3.jpg"]
+      },
+      quickreserve: {
+        title: "Quick Reserve",
+        subtitle: "Appointment Scheduling for Pet Grooming & Clinics",
+        desc: "Designed UI from wireframes to final screens and developed the complete front-end interface for both User and Admin sides with PHP integration.",
+        role: "Front-End Developer & UI/UX Designer",
+        timeline: "March 2025 – May 2025",
+        tags: ["Bootstrap","JavaScript","PHP","XML"],
+        highlights: [
+          "Created wireframes (Balsamiq) and final UI (Figma)",
+          "Built User and Admin interfaces",
+          "Handled XML-based data handling integration"
+        ],
+        github: "https://github.com/capalaranzaneallyson",
+        images: ["QR/Picture1.png","QR/Picture2.png","QR/Picture3.png"]
+      },
+      twkart: {
+        title: "tw.kart",
+        subtitle: "Jewelry & Accessories E-commerce System",
+        desc: "Created a website for an existing jewelry and accessories shop. Developed front-end pages and connected database functionality.",
+        role: "Website Developer",
+        timeline: "November 2024 – December 2024",
+        tags: ["HTML","Bootstrap","JavaScript","MySQL"],
+        highlights: [
+          "Built responsive e-commerce UI",
+          "Designed product listing and product details pages",
+          "Integrated with MySQL database"
+        ],
+        github: "",
+        images: ["TW/Picture1.png","TW/Picture2.png","TW/Picture3.png"]
+      },
+      barangay: {
+        title: "Barangay Bagong Ilog Information System",
+        subtitle: "Community Information System",
+        desc: "Led the UI design and built the full front end of the system. Developed using PHP and MySQL and deployed online.",
+        role: "Lead UI/UX Designer & Front-End Developer",
+        timeline: "May 2024 – June 2024",
+        tags: ["HTML","CSS","JavaScript","PHP","MySQL"],
+        highlights: [
+          "Led the UI design and system layout",
+          "Built full front-end interface",
+          "Deployed using 000webhost"
+        ],
+        github: "https://github.com/capalaranzaneallyson",
+        images: ["BIS/Picture1.png","BIS/Picture2.png","BIS/Picture3.png"]
+      }
+    };
+
+    const projectCards = [
+      { key:"smartvision", img:"SV/Picture1.png", badges:["React","Supabase","YOLOv8"], desc:"Braille text interpretation using image processing. UI/UX design + front-end pages with auth." },
+      { key:"ctf", img:"CTC/Picture1.jpg", badges:["HTML","CSS","JavaScript","PHP"], desc:"UI design + game flow planning (timer, scoring, hints). Built a working prototype." },
+      { key:"quickreserve", img:"QR/Picture1.png", badges:["Bootstrap","JavaScript","PHP","XML"], desc:"Appointment scheduling UI/UX + front-end for User & Admin with PHP integration." },
+      { key:"twkart", img:"TW/Picture1.png", badges:["Bootstrap","JavaScript","MySQL"], desc:"Website for a jewelry & accessories shop. Built front-end pages and database support." },
+      { key:"barangay", img:"BIS/Picture1.png", badges:["PHP","MySQL","HTML/CSS"], desc:"Led UI design and built the full front end. Developed with PHP & MySQL and deployed online." }
+    ];
+
+    const grid = document.getElementById("projectsGrid");
+
+    grid.innerHTML = projectCards.map(p => {
+      const title = projectNotebook[p.key].title;
+
+      const badgeHTML = p.badges.map(b =>
+        `<span class="badge text-bg-dark !bg-purple-500/10 !text-purple-100 !border !border-purple-400/25">${b}</span>`
+      ).join("");
+
+      return `
+        <div class="col-md-6 col-lg-4 d-flex">
+          <div class="glow-card w-100">
+            <div class="card-inner bg-white/5 border border-white/10 rounded-3xl p-4 h-100
+                        d-flex flex-column
+                        hover:border-purple-400/40 hover:bg-white/10
+                        hover:shadow-[0_0_45px_rgba(168,85,247,0.18)]
+                        hover:-translate-y-1 transition duration-300">
+
+              <div class="w-full h-40 bg-gradient-to-br from-purple-500/10 via-white/5 to-transparent rounded-2xl border border-white/10 overflow-hidden flex items-center justify-center">
+                <img src="${p.img}" alt="${title}"
+                  class="max-w-full max-h-full object-contain"
+                  onerror="this.parentElement.style.display='none'; this.parentElement.nextElementSibling.style.display='grid';" />
+              </div>
+
+              <div class="rounded-2xl bg-white/10 border border-white/10 h-40 hidden place-items-center text-white/50">
+                Add: ${p.img}
+              </div>
+
+              <h3 class="mt-3 text-xl font-semibold">${title}</h3>
+              <p class="text-white/60 mt-2">${p.desc}</p>
+
+              <div class="d-flex gap-2 flex-wrap mt-3">${badgeHTML}</div>
+
+              <div class="d-flex gap-2 flex-wrap mt-4 mt-auto">
+                <button class="btn btn-sm btn-primary rounded-pill px-3 shine-btn
+                               !bg-purple-500 !border-0 hover:!bg-purple-400
+                               hover:shadow-[0_0_25px_rgba(168,85,247,0.55)]
+                               transition"
+                  onclick="openNotebook('${p.key}')">
+                  View Notebook
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    // Modal Elements
+    const mainPreview = document.getElementById("mainPreview");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const imgCounter = document.getElementById("imgCounter");
+
+    const notebookTitle = document.getElementById("notebookTitle");
+    const notebookSubtitle = document.getElementById("notebookSubtitle");
+    const notebookDesc = document.getElementById("notebookDesc");
+    const notebookRole = document.getElementById("notebookRole");
+    const notebookTimeline = document.getElementById("notebookTimeline");
+    const notebookTags = document.getElementById("notebookTags");
+    const notebookHighlights = document.getElementById("notebookHighlights");
+    const notebookGithub = document.getElementById("notebookGithub");
+
+    let currentImages = [];
+    let currentIndex = 0;
+
+    function updatePreview() {
+      if (!currentImages.length) return;
+      mainPreview.src = currentImages[currentIndex];
+      imgCounter.textContent = `${currentIndex + 1} / ${currentImages.length}`;
+      prevBtn.style.display = currentImages.length <= 1 ? "none" : "grid";
+      nextBtn.style.display = currentImages.length <= 1 ? "none" : "grid";
+    }
+
+    prevBtn.addEventListener("click", () => {
+      if (!currentImages.length) return;
+      currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+      updatePreview();
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (!currentImages.length) return;
+      currentIndex = (currentIndex + 1) % currentImages.length;
+      updatePreview();
+    });
+
+    function openNotebook(projectKey) {
+      const d = projectNotebook[projectKey];
+      if (!d) return;
+
+      notebookTitle.textContent = d.title;
+      notebookSubtitle.textContent = d.subtitle;
+      notebookDesc.textContent = d.desc;
+      notebookRole.textContent = d.role;
+      notebookTimeline.textContent = d.timeline;
+
+      notebookTags.innerHTML = (d.tags || []).map(t =>
+        `<span class="badge text-bg-dark !bg-purple-500/10 !text-purple-100 !border !border-purple-400/25">${t}</span>`
+      ).join("");
+
+      notebookHighlights.innerHTML = (d.highlights || []).map(h => `<li>${h}</li>`).join("");
+
+      if (d.github && d.github.trim() !== "") {
+        notebookGithub.href = d.github;
+        notebookGithub.style.display = "inline-block";
+      } else {
+        notebookGithub.style.display = "none";
+      }
+
+      currentImages = d.images || [];
+      currentIndex = 0;
+      updatePreview();
+
+      new bootstrap.Modal(document.getElementById("notebookModal")).show();
+    }
+  </script>
+
+</body>
+</html>
